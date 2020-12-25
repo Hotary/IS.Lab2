@@ -12,9 +12,13 @@ namespace Lab2
 
         static void Main(string[] args)
         {
+            //Задаем функцию
             GA.Func = (x) => { return x * x + 4; };
+            //Инициализируем Генетический Алгоритм
             GA.Init();
+            //Работа генетического алгоритма
             var result = GA.Work();
+            //Вывод результата
             Console.WriteLine("Iteration: {0}", GA.Step);
             Console.WriteLine("Result: x = {0}; y = {1}.", result.X, result.Y);
             Console.ReadLine();

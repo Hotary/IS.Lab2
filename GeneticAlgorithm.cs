@@ -20,33 +20,40 @@ namespace Lab2
         public Func<double, double> Func;
         public List<Descendant> Population = new List<Descendant>();
 
+        //функция для минимизации
         private double func(double x) 
         {
             return Func(x);
         }
 
+        //Инициализация генетического алгоритма
         public void Init() 
         {
+            //Создаюм популяцию
             GeneratePopulation();
+            //Расчитываем 
             CalcFitness();
         }
 
+        //Работа генетического алгоритма
         public Descendant Work() 
         {
             int i = 0;
-            for (; i < max_iteration; i++) 
+            for (; i < max_iteration; i++) // Ограничим кол-во итераций
             {
-                Crossing();
-                Mutation();
-                CalcFitness();
-                Selection();
-                if (Math.Abs(Population.First().Y - Population.Last().Y) <= delta)
+                Crossing(); // Скерщивание
+                Mutation(); //Мутация
+                CalcFitness(); //Расчет приспособленности
+                Selection(); //Селекция
+                if (Math.Abs(Population.First().Y - Population.Last().Y) <= delta) //Расчет разброса полученных потомков (для остановки алгоритма не дожидаясь максимального кол-ва итераций)
                     break;
             }
             Step = i;
+            //Возращаем минимальное значение
             return Population.First();
         }
 
+        //Генерация популяции
         public void GeneratePopulation() 
         {
             for(int i = 0; i < size; i++) 
@@ -59,6 +66,7 @@ namespace Lab2
             }
         }
 
+        //Расчет приспособленности
         public void CalcFitness() 
         {
             foreach(var desc in Population) 
@@ -68,6 +76,7 @@ namespace Lab2
             Population.Sort();
         }
 
+        //Селекция
         public void Selection() 
         {
             //Селекция усечением
@@ -75,15 +84,18 @@ namespace Lab2
                 Population.RemoveAt(i);
         }
 
+        //Скрещивание
         public void Crossing() 
         {
             var old_size = Population.Count;
+            //Пока не доберем нужное кол-во потомков
             while (Population.Count < size) 
             {
                 int i = (int)(rnd.NextDouble() * old_size);
                 int j = (int)(rnd.NextDouble() * old_size);
-
-                if(p > rnd.NextDouble()) 
+                //Получаем индексы потомков
+                //И с некоторой вероятностью производим скрещивание
+                if (p > rnd.NextDouble()) 
                 {
                     var children = CrossingDesc(Population[i], Population[j]);
                     Population.Add(children.Item1);
@@ -92,6 +104,7 @@ namespace Lab2
             }
         }
 
+        //Скрещивание двух потомков с использованием арифметического оператора кросинговерра 
         public (Descendant, Descendant) CrossingDesc(Descendant x, Descendant y) 
         {
             var lambda = rnd.NextDouble();
@@ -100,11 +113,13 @@ namespace Lab2
             return (cx, cy);
         }
 
-        public void Mutation() 
-        {
-            foreach(var desc in Population) 
+        //Мутация
+        public void Mutation()
+        {   //Для каждого потомка
+            foreach (var desc in Population) 
             {
-                if(mutationrate > rnd.NextDouble())
+                //С некоторой вероятность производим мутацию от -50 до 50
+                if (mutationrate > rnd.NextDouble())
                 {
                     desc.X += (rnd.NextDouble() - 0.5) * 100;
                 }

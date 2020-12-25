@@ -12,7 +12,7 @@ namespace Lab2
         
         //Это решение фукнции, для дальнейшей оценкии популяции
         public double Y;
-
+        //Сравнения двух потомков для сортировки
         public int Compare(Descendant x, Descendant y)
         {
             var delta = x.Y - y.Y;
@@ -22,7 +22,7 @@ namespace Lab2
                 return -1;
             return 0;
         }
-
+        //Сравнения двух потомков для сортировки
         public int CompareTo(object obj)
         {
             var y = obj as Descendant;
